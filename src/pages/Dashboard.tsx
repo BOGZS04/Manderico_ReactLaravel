@@ -1,15 +1,31 @@
 import { useState } from "react";
+
 import MainLayout from "../components/layouts/MainLayout";
 import { ToastProvider, Button } from "../components/ui/index";
 import { notify } from "../util/notify";
 
+// Forms imports (NEW)
+import {
+  InputField,
+  PasswordInputField,
+  Checkbox,
+  Radio,
+  Select,
+  MultiSelect,
+  FileUploadField,
+  TextArea
+} from "../components/ui/forms/index";
+
 const Dashboard = () => {
 
+  // ---------------------------
+  // TOAST FUNCTIONS (OLD)
+  // ---------------------------
   const handleToggleNotification = () => {
-    notify.info("Info Message")
-    notify.success("Success Message")
-    notify.warning("Warning Message")
-    notify.error("Error Message")
+    notify.info("Info Message");
+    notify.success("Success Message");
+    notify.warning("Warning Message");
+    notify.error("Error Message");
   };
 
   const fakeApiCall = () =>
@@ -17,7 +33,7 @@ const Dashboard = () => {
       setTimeout(() => {
         Math.random() > 0.5 ? resolve("Success!") : reject("Error!");
       }, 2000);
-  });
+    });
 
   const handlePromiseNotification = () => {
     notify.promise(fakeApiCall(), {
@@ -26,7 +42,7 @@ const Dashboard = () => {
       error: "Something went wrong!",
     });
   };
-  
+
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLoadingButton = async () => {
@@ -41,63 +57,161 @@ const Dashboard = () => {
     }
   };
 
+  // ---------------------------
+  // FORM STATES (NEW)
+  // ---------------------------
+  const [roles, setRoles] = useState<string[]>([]);
+  const [textArea, setTextArea] = useState("");
+
+  const handleFileSelect = (selectedFiles: File[]) => {
+    console.log("Selected files:", selectedFiles);
+  };
+
+  // ---------------------------
+  // UI CONTENT
+  // ---------------------------
   const content = (
     <>
       <div className="space-y-12 pb-20">
-        <h1 className="text-text">Button & Toast Notification Usage Examples</h1>
 
-        {/* 🔔 Notification Trigger Example */}
+        {/* HEADER */}
+        <h1 className="text-text">
+          Button & Toast Notification Usage Examples
+        </h1>
+
+        {/* NOTIFICATIONS */}
         <div className="flex gap-3">
-
-          <Button type="button" variant="primary" onClick={handleToggleNotification} iconName="FaBell">
+          <Button
+            type="button"
+            variant="primary"
+            iconName="FaBell"
+            onClick={handleToggleNotification}
+          >
             Toggle Notification
           </Button>
 
-          <Button type="button" variant="secondary" iconName="FaPlay"
-            onClick={handlePromiseNotification}>
+          <Button
+            type="button"
+            variant="secondary"
+            iconName="FaPlay"
+            onClick={handlePromiseNotification}
+          >
             Run Promise Toast
+          </Button>
+        </div>
+
+        {/* BUTTON EXAMPLES */}
+        <div className="flex flex-wrap gap-4">
+
+          <Button type="button" variant="secondary">
+            Secondary
+          </Button>
+
+          <Button type="button" variant="danger">
+            Simple Button
+          </Button>
+
+          <Button type="button" variant="outline" iconName="FaBell">
+            With Icon
+          </Button>
+
+          <Button
+            type="button"
+            variant="ghost"
+            isLoading={isLoading}
+            loadingText="Submitting..."
+            iconName="FaCloudArrowUp"
+            onClick={handleLoadingButton}
+          >
+            Submit
           </Button>
 
         </div>
 
-        {/* 🚀 Button Component Examples */}
-        <div className="space-y-4">
+        {/* ---------------- FORM SECTION (NEW) ---------------- */}
+        <div className="space-y-12 pb-20">
+          <h1 className="text-text">Forms</h1>
 
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-col gap-3">
 
-            {/* 2️⃣ Primary Button with Tooltip */}
-            <Button type="button" variant="primary" tooltip="With Tooltips" tooltipPosition="bottom">
-              Primary With Tooltip
-            </Button>
+            <InputField
+              label="Email"
+              name="email"
+              type="email"
+              placeholder="Enter your email"
+              iconName="FaEnvelope"
+              required
+              error="test"
+            />
 
-            <Button type="button" variant="secondary">
-              Secondary
-            </Button>
+            <PasswordInputField
+              label="Password"
+              name="password"
+              placeholder="Enter your password"
+              error="Password does not match"
+            />
 
-            {/* 1️⃣ Button without icon */}
-            <Button type="button" variant="danger">
-              Simple Button
-            </Button>
+            <Checkbox
+              label="Is Enroll"
+              name="status"
+            />
 
-            {/* 2️⃣ Button with icon */}
-            <Button type="button" variant="outline" iconName="FaBell">
-              With Icon
-            </Button>
+            <div className="inline-flex gap-3">
+              <Radio name="gender" label="Male" />
+              <Radio name="gender" label="Female" />
+            </div>
 
-            {/* 3️⃣ Button with loading spinner */}
-            <Button
-              type="button"
-              variant="ghost"
-              isLoading={isLoading}
-              loadingText="Submitting..."
-              iconName="FaCloudArrowUp"
-              onClick={handleLoadingButton}>
-              Submit
-            </Button>
+            <Select
+              name="programming_languages"
+              label="Programming Languages"
+              iconName="FaLanguage"
+              required
+              error="Programming Language is required"
+              options={[
+                { value: "python", label: "Python" },
+                { value: "c", label: "C" },
+                { value: "php", label: "PHP" }
+              ]}
+            />
+
+            <MultiSelect
+              label="Roles"
+              options={[
+                { value: "admin", label: "Admin" },
+                { value: "teacher", label: "Teacher" }
+              ]}
+              selectedValues={roles}
+              onChange={setRoles}
+              iconName="FaUsers"
+            />
+
+            <FileUploadField
+              label="Avatar"
+              name="files"
+              accept="image/jpg,image/jpeg,image/png"
+              onFileSelect={handleFileSelect}
+            />
+
+            <FileUploadField
+              label="Images"
+              name="files"
+              maxFiles={2}
+              multiple
+              accept="image/jpg,image/jpeg,image/png"
+              onFileSelect={handleFileSelect}
+            />
+
+            <TextArea
+              label="Message"
+              value={textArea}
+              onChange={(e) => setTextArea(e.target.value)}
+              showCounter
+              maxLength={200}
+            />
 
           </div>
-
         </div>
+
       </div>
 
       <ToastProvider />
