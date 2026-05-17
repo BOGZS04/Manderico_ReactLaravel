@@ -1,4 +1,5 @@
 export * from './Icon';
-export * from './providers/ToastProvider.tsx';
+export * from './providers/ToastProvider';
 export * from './LoadingSpinner';
 export * from './Button';
+export * from './modal';
