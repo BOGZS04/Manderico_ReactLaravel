@@ -1,31 +1,24 @@
 import { useState } from "react";
-
 import MainLayout from "../components/layouts/MainLayout";
-import { ToastProvider, Button } from "../components/ui/index";
+import { ToastProvider, Button, Image } from "../components/ui/index";
 import { notify } from "../util/notify";
-
-// Forms imports (NEW)
-import {
-  InputField,
-  PasswordInputField,
-  Checkbox,
-  Radio,
-  Select,
-  MultiSelect,
-  FileUploadField,
+import { 
+  InputField, PasswordInputField, Checkbox, 
+  Radio, Select, MultiSelect, FileUploadField,
   TextArea
-} from "../components/ui/forms/index";
+} 
+from "../components/ui/forms/index";
+
+// EXAMPLE IMAGE
+import HeroImage from '../assets/hero.png';
 
 const Dashboard = () => {
 
-  // ---------------------------
-  // TOAST FUNCTIONS (OLD)
-  // ---------------------------
   const handleToggleNotification = () => {
-    notify.info("Info Message");
-    notify.success("Success Message");
-    notify.warning("Warning Message");
-    notify.error("Error Message");
+    notify.info("Info Message")
+    notify.success("Success Message")
+    notify.warning("Warning Message")
+    notify.error("Error Message")
   };
 
   const fakeApiCall = () =>
@@ -33,7 +26,7 @@ const Dashboard = () => {
       setTimeout(() => {
         Math.random() > 0.5 ? resolve("Success!") : reject("Error!");
       }, 2000);
-    });
+  });
 
   const handlePromiseNotification = () => {
     notify.promise(fakeApiCall(), {
@@ -42,7 +35,7 @@ const Dashboard = () => {
       error: "Something went wrong!",
     });
   };
-
+  
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLoadingButton = async () => {
@@ -57,85 +50,84 @@ const Dashboard = () => {
     }
   };
 
-  // ---------------------------
-  // FORM STATES (NEW)
-  // ---------------------------
   const [roles, setRoles] = useState<string[]>([]);
-  const [textArea, setTextArea] = useState("");
 
   const handleFileSelect = (selectedFiles: File[]) => {
-    console.log("Selected files:", selectedFiles);
+    console.log('Selected files:', selectedFiles);
   };
 
-  // ---------------------------
-  // UI CONTENT
-  // ---------------------------
+  const [textArea, setTextArea] = useState('');
+
   const content = (
     <>
       <div className="space-y-12 pb-20">
-
-        {/* HEADER */}
+        
+        {/* Buttons & Notification */}
         <h1 className="text-text">
           Button & Toast Notification Usage Examples
         </h1>
 
-        {/* NOTIFICATIONS */}
+        {/* 🔔 Notification Trigger Example */}
         <div className="flex gap-3">
-          <Button
-            type="button"
-            variant="primary"
-            iconName="FaBell"
-            onClick={handleToggleNotification}
-          >
+
+          <Button type="button" variant="primary" onClick={handleToggleNotification} iconName="FaBell">
             Toggle Notification
           </Button>
 
-          <Button
-            type="button"
-            variant="secondary"
-            iconName="FaPlay"
-            onClick={handlePromiseNotification}
-          >
+          <Button type="button" variant="secondary" iconName="FaPlay"
+            onClick={handlePromiseNotification}>
             Run Promise Toast
           </Button>
-        </div>
-
-        {/* BUTTON EXAMPLES */}
-        <div className="flex flex-wrap gap-4">
-
-          <Button type="button" variant="secondary">
-            Secondary
-          </Button>
-
-          <Button type="button" variant="danger">
-            Simple Button
-          </Button>
-
-          <Button type="button" variant="outline" iconName="FaBell">
-            With Icon
-          </Button>
-
-          <Button
-            type="button"
-            variant="ghost"
-            isLoading={isLoading}
-            loadingText="Submitting..."
-            iconName="FaCloudArrowUp"
-            onClick={handleLoadingButton}
-          >
-            Submit
-          </Button>
 
         </div>
 
-        {/* ---------------- FORM SECTION (NEW) ---------------- */}
+        {/* 🚀 Button Component Examples */}
+        <div className="space-y-4">
+
+          <div className="flex flex-wrap gap-4">
+
+            {/* 2️⃣ Primary Button with Tooltip */}
+            <Button type="button" variant="primary" tooltip="With Tooltips" tooltipPosition="bottom">
+              Primary With Tooltip
+            </Button>
+
+            <Button type="button" variant="secondary">
+              Secondary
+            </Button>
+
+            {/* 1️⃣ Button without icon */}
+            <Button type="button" variant="danger">
+              Simple Button
+            </Button>
+
+            {/* 2️⃣ Button with icon */}
+            <Button type="button" variant="outline" iconName="FaBell">
+              With Icon
+            </Button>
+
+            {/* 3️⃣ Button with loading spinner */}
+            <Button
+              type="button"
+              variant="ghost"
+              isLoading={isLoading}
+              loadingText="Submitting..."
+              iconName="FaCloudArrowUp"
+              onClick={handleLoadingButton}>
+              Submit
+            </Button>
+
+          </div>
+
+        </div>
+
+        {/* Forms */}
+
         <div className="space-y-12 pb-20">
           <h1 className="text-text">Forms</h1>
-
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col space-x-4 gap-3">
 
             <InputField
-              label="Email"
+              label="Email" 
               name="email"
               type="email"
               placeholder="Enter your email"
@@ -148,17 +140,17 @@ const Dashboard = () => {
               label="Password"
               name="password"
               placeholder="Enter your password"
-              error="Password does not match"
+              error="Password doesn ot match"
             />
-
+            
             <Checkbox
               label="Is Enroll"
               name="status"
             />
 
             <div className="inline-flex gap-3">
-              <Radio name="gender" label="Male" />
-              <Radio name="gender" label="Female" />
+              <Radio name="gender" label="Male"/>
+              <Radio name="gender" label="Female"/>
             </div>
 
             <Select
@@ -168,17 +160,26 @@ const Dashboard = () => {
               required
               error="Programming Language is required"
               options={[
-                { value: "python", label: "Python" },
-                { value: "c", label: "C" },
-                { value: "php", label: "PHP" }
+                {
+                  value: "python",
+                  label: "Python",
+                },
+                {
+                  value: "C",
+                  label: "C",
+                },
+                {
+                  value: "php",
+                  label: "PHP",
+                }
               ]}
             />
 
             <MultiSelect
               label="Roles"
               options={[
-                { value: "admin", label: "Admin" },
-                { value: "teacher", label: "Teacher" }
+                { value: 'admin', label: 'Admin' },
+                { value: 'teacher', label: 'Teacher' },
               ]}
               selectedValues={roles}
               onChange={setRoles}
@@ -188,7 +189,7 @@ const Dashboard = () => {
             <FileUploadField
               label="Avatar"
               name="files"
-              accept="image/jpg,image/jpeg,image/png"
+              accept="image/jpg,jpeg,png"
               onFileSelect={handleFileSelect}
             />
 
@@ -197,7 +198,7 @@ const Dashboard = () => {
               name="files"
               maxFiles={2}
               multiple
-              accept="image/jpg,image/jpeg,image/png"
+              accept="image/jpg,jpeg,png"
               onFileSelect={handleFileSelect}
             />
 
@@ -210,6 +211,48 @@ const Dashboard = () => {
             />
 
           </div>
+        </div>
+
+        {/*  IMAGE COMPONENT USAGES */}
+        <div className="space-y-4">
+          <h1 className="text-text">Image Component Example Usage</h1>
+          
+          <Image 
+            src={HeroImage} 
+            alt="Hero Image"
+            size="md"
+          />
+
+          <Image 
+            src={HeroImage}
+            customSize="w-40 h-60" 
+          />
+
+          <Image 
+            src={HeroImage} 
+            customSize="w-[180px] h-[250px]" 
+          />
+
+          <Image 
+            src={HeroImage}
+            alt="Hero Image"
+            customSize="w-full"
+            aspectRatio="aspect-[16/9]"
+          />
+
+          <Image 
+            src="/images/user.jpg"
+            size="md"
+            className="rounded-full"
+          />
+
+          <Image 
+            src="/images/user.jpg"
+            size="md"
+            className="rounded-full"
+            fallbackIcon="FaUser"
+          />
+
         </div>
 
       </div>
